@@ -1,0 +1,23 @@
+[
+  {
+    "id": "email_1",
+    "subject": "Flight Booking Confirmation",
+    "sender": "delta@airline.com",
+    "date": "2024-06-18",
+    "body": "Hi Adwait, your Delta flight from LAX to JFK is confirmed for Friday, June 21st at 2:15 PM. Check-in opens 24 hours prior to departure. Safe travels!"
+  },
+  {
+    "id": "email_2",
+    "subject": "Lunch This Friday?",
+    "sender": "jacob@friend.com",
+    "date": "2024-06-17",
+    "body": "Hey! Want to grab lunch on Friday around 12:30pm? Let me know if that works. - Jacob"
+  },
+  {
+    "id": "email_3",
+    "subject": "Reminder: Team Sync",
+    "sender": "manager@work.com",
+    "date": "2024-06-16",
+    "body": "Let’s catch up for a quick sync this Sunday afternoon. Nothing formal — just touch base on the Q2 goals and OKRs."
+  }
+]
