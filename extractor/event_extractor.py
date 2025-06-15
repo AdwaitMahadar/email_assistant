@@ -48,7 +48,7 @@ def extract_event_from_email(email_body: str, email_id: str = None) -> dict:
         return {"type": "error", "error": str(e)}
 
 # Optional test run
-if __name__ == "__main__":
-    email_text = "Let's meet for lunch this Friday around noon. Jacob"
-    result = extract_event_from_email(email_text, "email_test")
-    print(result)
+# if __name__ == "__main__":
+#     email_text = "Let's meet for lunch this Friday around noon. Jacob"
+#     result = extract_event_from_email(email_text, "email_test")
+#     print(result)
