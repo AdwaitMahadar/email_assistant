@@ -25,25 +25,47 @@ def load_prompt():
         return f.read()
 
 @observe(name="answer_question")  # ✅ Langfuse v3 trace
-def answer_question(events: list, question: str) -> str:
+def answer_question(events: list, question: str) -> dict:
     prompt_template = load_prompt()
     base_prompt = prompt_template.replace("{{event_list}}", json.dumps(events, indent=2))
     final_prompt = base_prompt.replace("{{question}}", question)
 
     try:
         response = model.generate_content(final_prompt)
-        answer = response.text.strip()
+        text = response.text.strip()
 
-        if answer.lower().strip(".!?") == question.lower().strip(".!?") or len(answer.split()) < 5:
+        # Handle markdown-wrapped JSON
+        if text.startswith("```json"):
+            text = text.replace("```json", "").replace("```", "").strip()
+
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError:
+            # Fallback: if model doesn't return clean JSON, retry with hint
             fallback_prompt = (
                 final_prompt
-                + "\n\nNote: If you're unsure how to answer, ask the user to clarify or suggest what they could do next."
+                + "\n\nMake sure your response is a clean JSON object as described above."
             )
             fallback_response = model.generate_content(fallback_prompt)
-            answer = fallback_response.text.strip()
+            text = fallback_response.text.strip()
+            if text.startswith("```json"):
+                text = text.replace("```json", "").replace("```", "").strip()
+            try:
+                parsed = json.loads(text)
+            except:
+                parsed = {
+                    "answer": "Sorry, I couldn't understand your question clearly.",
+                    "referenced_email_id": "none"
+                }
 
-        return answer
+        return {
+            "answer": parsed.get("answer", "Sorry, I couldn't find any answer."),
+            "referenced_email_id": parsed.get("referenced_email_id", "none")
+        }
 
     except Exception as e:
         print(f"❌ Failed to answer question: {e}")
-        return "Sorry, I couldn't process your question."
+        return {
+            "answer": "Sorry, I couldn't process your question.",
+            "referenced_email_id": "none"
+        }

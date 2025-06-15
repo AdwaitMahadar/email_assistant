@@ -4,7 +4,8 @@ from memory.event_store import EventStore
 from qa.question_answerer import answer_question
 from calendar_utils.event_to_ics import create_ics_event
 from intent.classifier import classify_intent
-from summarizer.summarizer import summarize  # ✅ Summarizer added
+from summarizer.summarizer import summarize
+from email_utils.send_email import open_confirmation_email
 
 # Load emails from sample JSON
 def load_sample_emails(filepath="data/sample_emails.json") -> list:
@@ -34,14 +35,24 @@ def main():
 
     print("\n❓ Ask the assistant a question (e.g. 'Do I have lunch this week?'):\n")
 
+    last_event = None  # ✅ Keep track of referenced event
+
     while True:
         user_input = input("> ").strip()
         if not user_input:
             break
 
-        response = answer_question(events, user_input)
-        print("\n💬 Assistant says:")
-        print(response)
+        result = answer_question(events, user_input)
+
+        if isinstance(result, dict):
+            print("\n💬 Assistant says:")
+            print(result.get("answer", ""))
+            referenced_id = result.get("referenced_email_id", None)
+            last_event = store.get_event_by_email_id(referenced_id) if referenced_id else None
+        else:
+            print("\n💬 Assistant says:")
+            print(result)
+            last_event = None
 
         print("\n💡 You can continue the conversation or say things like:")
         print("   → create calendar event")
@@ -51,8 +62,6 @@ def main():
         print("   → or just ask something else!")
 
         follow_up = input("\n> ").strip()
-
-        # 🔍 Classify follow-up intent
         intent = classify_intent(follow_up)
 
         if intent == "exit":
@@ -60,17 +69,41 @@ def main():
             break
 
         elif intent == "create_calendar_event":
-            for event in events:
-                if "datetime" in event and event["datetime"] not in ["TBD", None, ""]:
-                    filename = f"event_{event['type']}_{event['source_email_id']}.ics"
-                    create_ics_event(event, filename)
-                    print(f"✅ Calendar event saved as {filename}")
-                    break
+            target = last_event if last_event and "datetime" in last_event else None
+            if not target:
+                for e in events:
+                    if "datetime" in e and e["datetime"] not in ["TBD", None, ""]:
+                        target = e
+                        break
+            if target:
+                filename = f"event_{target['type']}_{target['source_email_id']}.ics"
+                create_ics_event(target, filename)
+                print(f"✅ Calendar event saved as {filename}")
             else:
                 print("⚠️ No suitable event with datetime found.")
 
         elif intent == "send_confirmation_email":
-            print("📧 (Placeholder) Sending confirmation email... (to be implemented)")
+            if last_event:
+                open_confirmation_email(last_event)
+            else:
+                # Try to guess based on recent input
+                lower_input = follow_up.lower()
+                matched_event = None
+
+                for event in events:
+                    if event.get("type") != "meeting":
+                        continue
+                    if "participants" in event and any(p.lower() in lower_input for p in event["participants"]):
+                        matched_event = event
+                        break
+                    if event.get("title") and "adwait" in lower_input and "adwait" in event["title"].lower():
+                        matched_event = event
+                        break
+
+                if matched_event:
+                    open_confirmation_email(matched_event)
+                else:
+                    print("⚠️ Couldn't find a matching meeting to confirm.")
 
         elif intent == "find_nearby_place":
             print("📍 (Placeholder) Finding nearby places... (to be implemented)")
@@ -80,9 +113,16 @@ def main():
             print("\n📝 Summary:\n" + summary)
 
         elif intent == "new_question":
-            response = answer_question(events, follow_up)
-            print("\n💬 Assistant says:")
-            print(response)
+            result = answer_question(events, follow_up)
+            if isinstance(result, dict):
+                print("\n💬 Assistant says:")
+                print(result.get("answer", ""))
+                referenced_id = result.get("referenced_email_id", None)
+                last_event = store.get_event_by_email_id(referenced_id) if referenced_id else None
+            else:
+                print("\n💬 Assistant says:")
+                print(result)
+                last_event = None
 
         else:
             print(f"🤖 Sorry, I didn’t understand what to do with: {follow_up}")

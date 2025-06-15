@@ -28,3 +28,13 @@ class EventStore:
         Clears all stored events (useful for testing).
         """
         self.events = []
+
+    def get_event_by_email_id(self, email_id: str) -> dict | None:
+        """
+        Return the first event that matches the given email ID.
+        """
+        for event in self.events:
+            if event.get("source_email_id") == email_id:
+                return event
+        return None
+
