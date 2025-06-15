@@ -27,14 +27,23 @@ def load_prompt():
 @observe(name="answer_question")  # ✅ Langfuse v3 trace
 def answer_question(events: list, question: str) -> str:
     prompt_template = load_prompt()
-    final_prompt = prompt_template \
-        .replace("{{event_list}}", json.dumps(events, indent=2)) \
-        .replace("{{question}}", question)
+    base_prompt = prompt_template.replace("{{event_list}}", json.dumps(events, indent=2))
+    final_prompt = base_prompt.replace("{{question}}", question)
 
     try:
         response = model.generate_content(final_prompt)
-        return response.text.strip()
+        answer = response.text.strip()
+
+        if answer.lower().strip(".!?") == question.lower().strip(".!?") or len(answer.split()) < 5:
+            fallback_prompt = (
+                final_prompt
+                + "\n\nNote: If you're unsure how to answer, ask the user to clarify or suggest what they could do next."
+            )
+            fallback_response = model.generate_content(fallback_prompt)
+            answer = fallback_response.text.strip()
+
+        return answer
 
     except Exception as e:
-        print(f"❌ Gemini Q&A failed: {e}")
+        print(f"❌ Failed to answer question: {e}")
         return "Sorry, I couldn't process your question."

@@ -1,23 +1,44 @@
 [
   {
     "id": "email_1",
-    "subject": "Flight Booking Confirmation",
-    "sender": "delta@airline.com",
+    "subject": "Flight Booking Confirmation: Delta",
+    "sender": "delta@notifications.com",
     "date": "2024-06-18",
-    "body": "Hi Adwait, your Delta flight from LAX to JFK is confirmed for Friday, June 21st at 2:15 PM. Check-in opens 24 hours prior to departure. Safe travels!"
+    "body": "Hi Adwait, your Delta Airlines flight from LAX to JFK is confirmed for June 21st at 2:15 PM. Please arrive 2 hours early for check-in."
   },
   {
     "id": "email_2",
-    "subject": "Lunch This Friday?",
-    "sender": "jacob@friend.com",
-    "date": "2024-06-17",
-    "body": "Hey! Want to grab lunch on Friday around 12:30pm? Let me know if that works. - Jacob"
+    "subject": "Lunch with Jacob",
+    "sender": "jacob@example.com",
+    "date": "2024-06-19",
+    "body": "Hey! Want to catch up this Friday around 12:30 PM? Let's do lunch and discuss your Q2 strategy."
   },
   {
     "id": "email_3",
-    "subject": "Reminder: Team Sync",
-    "sender": "manager@work.com",
-    "date": "2024-06-16",
-    "body": "Let’s catch up for a quick sync this Sunday afternoon. Nothing formal — just touch base on the Q2 goals and OKRs."
+    "subject": "Q2 Planning Sync",
+    "sender": "manager@startup.com",
+    "date": "2024-06-19",
+    "body": "Let’s do a quick sync on Monday about Q2 OKRs and roadmap. We can do a 20-min Zoom at 10 AM PST."
+  },
+  {
+    "id": "email_4",
+    "subject": "Dinner Meetup",
+    "sender": "maya@friends.com",
+    "date": "2024-06-20",
+    "body": "Hey Adwait! Are you free Saturday evening? Let's meet for dinner at that Italian place downtown."
+  },
+  {
+    "id": "email_5",
+    "subject": "Hotel Reservation - Sheraton",
+    "sender": "booking@sheraton.com",
+    "date": "2024-06-17",
+    "body": "Your stay at Sheraton San Diego is confirmed for June 22–24. Check-in starts at 3 PM. Reservation ID: SH123456."
+  },
+  {
+    "id": "email_6",
+    "subject": "AI Conference 2024 - Invite",
+    "sender": "events@aiconf.org",
+    "date": "2024-06-15",
+    "body": "We’re excited to have you join us at the AI Conference 2024! Your Day 1 sessions begin at 9 AM on June 25 at the Moscone Center, SF."
   }
 ]

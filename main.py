@@ -3,7 +3,8 @@ from extractor.event_extractor import extract_event_from_email
 from memory.event_store import EventStore
 from qa.question_answerer import answer_question
 from calendar_utils.event_to_ics import create_ics_event
-from intent.classifier import classify_intent  # ✅ New
+from intent.classifier import classify_intent
+from summarizer.summarizer import summarize  # ✅ Summarizer added
 
 # Load emails from sample JSON
 def load_sample_emails(filepath="data/sample_emails.json") -> list:
@@ -46,11 +47,12 @@ def main():
         print("   → create calendar event")
         print("   → send confirmation email")
         print("   → find nearby restaurants or coffee shops")
+        print("   → summarize my week")
         print("   → or just ask something else!")
 
         follow_up = input("\n> ").strip()
 
-        # 🔍 Use Gemini to classify intent
+        # 🔍 Classify follow-up intent
         intent = classify_intent(follow_up)
 
         if intent == "exit":
@@ -72,6 +74,10 @@ def main():
 
         elif intent == "find_nearby_place":
             print("📍 (Placeholder) Finding nearby places... (to be implemented)")
+
+        elif intent == "summarize_events":
+            summary = summarize(events, follow_up)
+            print("\n📝 Summary:\n" + summary)
 
         elif intent == "new_question":
             response = answer_question(events, follow_up)
