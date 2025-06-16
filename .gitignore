@@ -6,3 +6,4 @@ __pycache__/
 *.log
 *.ics
 .DS_Store
+calendar_utils/saved_events/*.ics

@@ -1,3 +1,4 @@
+import os
 import json
 from extractor.event_extractor import extract_event_from_email
 from memory.event_store import EventStore
@@ -76,7 +77,10 @@ def main():
                         target = e
                         break
             if target:
-                filename = f"event_{target['type']}_{target['source_email_id']}.ics"
+                folder = "calendar_utils/saved_events"
+                os.makedirs(folder, exist_ok=True)
+                
+                filename = os.path.join(folder, f"event_{target['type']}_{target['source_email_id']}.ics")
                 create_ics_event(target, filename)
                 print(f"✅ Calendar event saved as {filename}")
             else:

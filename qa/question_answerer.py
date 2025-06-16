@@ -58,9 +58,28 @@ def answer_question(events: list, question: str) -> dict:
                     "referenced_email_id": "none"
                 }
 
+        referenced_id = parsed.get("referenced_email_id", "none")
+
+        # ✅ Fallback logic if ID is missing
+        if referenced_id == "none":
+            question_lower = question.lower()
+            matched_event = None
+            for event in events:
+                if event.get("type") == "flight" and "flight" in question_lower:
+                    matched_event = event
+                elif event.get("type") == "meeting" and any(
+                    kw in question_lower for kw in ["meeting", "lunch", "dinner", "call"]
+                ):
+                    matched_event = event
+                elif event.get("type") == "hotel" and "hotel" in question_lower:
+                    matched_event = event
+                if matched_event:
+                    referenced_id = matched_event.get("source_email_id")
+                    break
+
         return {
             "answer": parsed.get("answer", "Sorry, I couldn't find any answer."),
-            "referenced_email_id": parsed.get("referenced_email_id", "none")
+            "referenced_email_id": referenced_id
         }
 
     except Exception as e:
