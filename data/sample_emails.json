@@ -11,14 +11,14 @@
     "subject": "Lunch with Jacob",
     "sender": "jacob@example.com",
     "date": "2024-06-19",
-    "body": "Hey! Want to catch up this Friday around 12:30 PM? Let's do lunch and discuss your Q2 strategy."
+    "body": "Hey! Want to catch up over Lunch this Friday around 12:30 PM?"
   },
   {
     "id": "email_3",
     "subject": "Q2 Planning Sync",
     "sender": "manager@startup.com",
     "date": "2024-06-19",
-    "body": "Let’s do a quick sync on Monday about Q2 OKRs and roadmap. We can do a 20-min Zoom at 10 AM PST."
+    "body": "Let’s do a quick sync meeting on Monday about Q2 OKRs and roadmap. We can do a 20-min Zoom at 10 AM PST."
   },
   {
     "id": "email_4",

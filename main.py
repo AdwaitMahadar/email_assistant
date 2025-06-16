@@ -6,6 +6,9 @@ from calendar_utils.event_to_ics import create_ics_event
 from intent.classifier import classify_intent
 from summarizer.summarizer import summarize
 from email_utils.send_email import open_confirmation_email
+from location_utils.nearby_finder import find_nearby_places_v1
+from intent.llm_place_parser import extract_place_query_llm as extract_place_query  # ✅ NEW
+
 
 # Load emails from sample JSON
 def load_sample_emails(filepath="data/sample_emails.json") -> list:
@@ -15,7 +18,6 @@ def load_sample_emails(filepath="data/sample_emails.json") -> list:
 def main():
     print("📨 Loading sample emails...")
     emails = load_sample_emails()
-
     store = EventStore()
 
     print("🧠 Extracting events from emails...\n")
@@ -28,14 +30,13 @@ def main():
             print(f"✗ No event found in {email['id']}")
 
     events = store.get_events()
-
     print("\n📋 Stored events:")
     for e in events:
         print("-", e)
 
     print("\n❓ Ask the assistant a question (e.g. 'Do I have lunch this week?'):\n")
 
-    last_event = None  # ✅ Keep track of referenced event
+    last_event = None  # ✅ Track last referenced event
 
     while True:
         user_input = input("> ").strip()
@@ -43,7 +44,6 @@ def main():
             break
 
         result = answer_question(events, user_input)
-
         if isinstance(result, dict):
             print("\n💬 Assistant says:")
             print(result.get("answer", ""))
@@ -86,10 +86,8 @@ def main():
             if last_event:
                 open_confirmation_email(last_event)
             else:
-                # Try to guess based on recent input
                 lower_input = follow_up.lower()
                 matched_event = None
-
                 for event in events:
                     if event.get("type") != "meeting":
                         continue
@@ -99,14 +97,26 @@ def main():
                     if event.get("title") and "adwait" in lower_input and "adwait" in event["title"].lower():
                         matched_event = event
                         break
-
                 if matched_event:
                     open_confirmation_email(matched_event)
                 else:
                     print("⚠️ Couldn't find a matching meeting to confirm.")
 
         elif intent == "find_nearby_place":
-            print("📍 (Placeholder) Finding nearby places... (to be implemented)")
+            place_type, location = extract_place_query(follow_up)
+            if not place_type or not location:
+                print("⚠️ Please include location in the phrase eg: 'Find restaurants near Palo Alto'")
+            else:
+                try:
+                    results = find_nearby_places_v1(place_type, location)
+                    if not results:
+                        print("😕 No places found.")
+                    else:
+                        print(f"\n📍 Top {len(results)} places near {location}:")
+                        for i, place in enumerate(results, 1):
+                            print(f"{i}. {place['name']} — {place['address']} (Rating: {place['rating']})")
+                except Exception as e:
+                    print(f"❌ Failed to fetch nearby places: {e}")
 
         elif intent == "summarize_events":
             summary = summarize(events, follow_up)

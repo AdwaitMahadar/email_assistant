@@ -4,10 +4,43 @@ Your job is to classify the intent of the message below into one of these catego
 - create_calendar_event
 - send_confirmation_email
 - find_nearby_place
+- summarize_events
 - new_question
 - exit
 
 Respond only with the intent name. No explanations.
 
-User Message:
+Here are some examples:
+
+Q: create a calendar invite  
+A: create_calendar_event
+
+Q: send a confirmation to Adwait  
+A: send_confirmation_email
+
+Q: find restaurants near Palo Alto  
+A: find_nearby_place
+
+Q: any coffee shops around San Jose?  
+A: find_nearby_place
+
+Q: summarize my week  
+A: summarize_events
+
+Q: what’s my next meeting  
+A: new_question
+
+Q: ok bye  
+A: exit
+
+Q: thanks, that’s helpful  
+A: exit
+
+Q: find italian food near downtown SF  
+A: find_nearby_place
+
+Q: do I have anything scheduled after the conference  
+A: new_question
+
+User Message:  
 {{user_message}}
