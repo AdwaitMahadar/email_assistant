@@ -2,7 +2,7 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-from langfuse import observe  # ✅ V3 decorator
+from langfuse import observe  # V3 decorator
 
 # Load env vars
 load_dotenv()
@@ -24,7 +24,7 @@ def load_prompt():
     with open("prompts/answer_event.txt", "r") as f:
         return f.read()
 
-@observe(name="answer_question")  # ✅ Langfuse v3 trace
+@observe(name="answer_question")  # Langfuse v3 trace
 def answer_question(events: list, question: str) -> dict:
     prompt_template = load_prompt()
     base_prompt = prompt_template.replace("{{event_list}}", json.dumps(events, indent=2))

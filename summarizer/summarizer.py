@@ -2,7 +2,7 @@ import os
 import json
 import google.generativeai as genai
 from dotenv import load_dotenv
-from langfuse import observe  # ✅ Langfuse trace decorator
+from langfuse import observe  # Langfuse trace decorator
 
 # Load env and configure Gemini
 load_dotenv()

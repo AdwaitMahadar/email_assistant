@@ -8,7 +8,7 @@ from intent.classifier import classify_intent
 from summarizer.summarizer import summarize
 from email_utils.send_email import open_confirmation_email
 from location_utils.nearby_finder import find_nearby_places_v1
-from intent.llm_place_parser import extract_place_query_llm as extract_place_query  # ✅ NEW
+from intent.llm_place_parser import extract_place_query_llm as extract_place_query 
 
 
 # Load emails from sample JSON
@@ -37,7 +37,7 @@ def main():
 
     print("\n❓ Ask the assistant a question (e.g. 'Do I have lunch this week?'):\n")
 
-    last_event = None  # ✅ Track last referenced event
+    last_event = None  # Track last referenced event
 
     while True:
         user_input = input("> ").strip()
