@@ -1,80 +1,69 @@
-📬 Email Context-Aware Assistant
-A smart assistant that reads incoming emails, extracts event-related context (flights, meetings, hotel bookings, etc.), allows conversational Q&A over your schedule, and can take intelligent actions like creating calendar events, sending confirmation emails, summarizing your week, and recommending nearby restaurants or coffee shops.
+# 📬 Email Context-Aware Assistant
 
-Built as part of the Interaction Co. Technical Challenge — focused on showcasing thoughtful AI-assisted interactions over emails.
+A smart command-line assistant that reads emails, extracts event information, and lets you **interact with it naturally** — from asking questions like "When is my next flight?" to finding restaurants near your conference.
 
-🧠 Core Features
-1. Email Event Extraction
-Parses and analyzes emails to extract structured event data (e.g. meetings, flights, hotel stays).
+---
 
-Uses the Gemini 1.5 Flash LLM to generate a structured representation from raw email bodies.
+## ✨ What Can It Do?
 
-Each parsed event includes relevant fields like type, datetime, location, participants, etc.
+- 📥 **Parse Emails**  
+  Extract structured events (meetings, flights, hotel bookings) from raw email text using Gemini.
 
-Extracted events are stored in an in-memory EventStore.
+- 💬 **Natural Language Q&A**  
+  Ask questions like:
+  - "Do I have lunch plans?"
+  - "What are my hotel check-in times?"
+  - "When is the AI conference?"
 
-2. Conversational Assistant
-You can chat with the assistant in natural language, e.g.:
+- 📅 **Create Calendar Events**  
+  Generate `.ics` files from event data that you can drag into Google Calendar or Outlook.
 
-“Do I have any lunch meetings this week?”
+- 📧 **Send Confirmation Emails**  
+  Open a pre-filled email confirming attendance with extracted details.
 
-“When is my flight?”
+- 🍽 **Find Nearby Places**  
+  Use Google Maps APIs to find restaurants or coffee shops near any location.
 
-“Summarize my week.”
+- 🧠 **Smart Follow-Up Understanding**  
+  The assistant keeps track of the last event you referenced to handle follow-ups like:
+  - "Add that to my calendar"
+  - "Send a confirmation email"
 
-Responses are generated with context-awareness using Gemini and reference your stored event data.
+---
 
-3. Multi-turn Q&A + Action Suggestions
-After answering a question, the assistant dynamically suggests what you can do next:
+## 🗂 Project Structure
 
-
-→ create calendar event
-→ send confirmation email
-→ find nearby restaurants or coffee shops
-→ summarize my week
-4. Smart Calendar Integration
-You can say: “create a calendar event for it” after referencing an event.
-
-Assistant saves a .ics calendar file for compatible import into any calendar app (Google, Apple, Outlook).
-
-Saved to calendar_utils/saved_events/ (ignored in Git).
-
-5. LLM-Based Nearby Place Finder
-Users can ask: “Find restaurants near Palo Alto” or “Are there any coffee shops around San Francisco?”
-
-Assistant parses the place type and location using an LLM-powered parser.
-
-Google Maps Places API is used to fetch real nearby suggestions.
-
-Top 3 places shown with name, address, and rating.
-
-🗂️ Project Structure
+```txt
 email_assistant/
-│
-├── main.py                        # 🔁 Main loop – orchestrates interaction
-├── data/sample_emails.json       # 📧 Sample email inputs
-│
-├── extractor/event_extractor.py  # 🧠 LLM-based email → event extraction
-├── qa/question_answerer.py       # 💬 Gemini-powered contextual Q&A
-├── calendar_utils/               # 📆 ICS event creation
-│   └── event_to_ics.py
-│   └── saved_events/             # (Calendar files saved here, gitignored)
-├── email_utils/send_email.py     # 📤 Open confirmation email drafts
+├── main.py                      # 🔁 Entry point — interactive CLI assistant
+├── data/
+│   └── sample_emails.json       # Sample input emails
+├── prompts/
+│   ├── answer_event.txt         # Prompt for answering questions
+│   └── classify_intent.txt      # Prompt for intent detection
+├── extractor/
+│   └── event_extractor.py       # Parses events using Gemini
+├── memory/
+│   └── event_store.py           # Stores extracted events
+├── qa/
+│   └── question_answerer.py     # Answers questions using Gemini
+├── calendar_utils/
+│   ├── event_to_ics.py          # Saves `.ics` files
+│   └── saved_events/            # [Git-tracked folder, files ignored]
+├── email_utils/
+│   └── send_email.py            # Drafts a confirmation email
+├── location_utils/
+│   └── nearby_finder.py         # Calls Google Maps API
 ├── intent/
-│   ├── classifier.py             # 🧭 Intent classification
-│   └── place_parser.py           # 🧠 Regex-based place query extraction
-│   └── llm_place_parser.py       # 🧠 LLM-based alternative parser
-├── location_utils/nearby_finder.py # 📍 Google Maps API integration
-├── memory/event_store.py         # 🧱 In-memory storage of extracted events
-├── prompts/                      # 📝 Prompt templates for Gemini
-│   ├── answer_event.txt
-│   └── classify_intent.txt
-├── .env                          # 🔐 API Keys (not committed)
-├── .gitignore                    # 📁 Excludes .ics, .env, test files, etc.
-└── README.md                     # 📖 You are here
+│   ├── classifier.py            # Classifies user follow-up intent
+│   ├── place_parser.py          # Regex-based fallback location extractor
+│   └── llm_place_parser.py      # LLM-based robust location parser
+├── .gitignore
+└── README.md
 
 
-⚙️ Technologies Used
+
+## ⚙️ Technologies Used
 Tool / Service	Purpose
 Python 3.12	Core language
 Google Gemini API	Event extraction, Q&A, intent parsing
@@ -84,17 +73,15 @@ ICS.py	Calendar file generation
 dotenv	API key management
 requests	HTTP calls
 
-🔒 Environment Variables
+## 🔒 Environment Variables
 Create a .env file in the root folder with:
 
 GEMINI_API_KEY=your_gemini_api_key
 GOOGLE_MAPS_API_KEY=your_maps_api_key
 Both keys are required for full functionality.
 
-🧪 How to Run
-bash
-Copy
-Edit
+## 🧪 How to Run
+
 # 1. Install dependencies
 pip install -r requirements.txt
 
@@ -103,7 +90,7 @@ pip install -r requirements.txt
 # 3. Run the assistant
 python main.py
 
-📝 Example Conversation
+## 📝 Example Conversation
 
 > summarize my week
 💬 You have a flight from LAX to JFK, meetings about Q2 strategy, and an AI conference in SF...
@@ -125,7 +112,7 @@ calendar_utils/saved_events/*.ics
 This ensures structure is preserved, but personal event files are not committed.
 
 
-✅ Final Notes
+## ✅ Final Notes
 Total time spent: ~4–5 hours
 
 Focused on meaningful assistant-like flow over email events
