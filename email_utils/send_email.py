@@ -1,5 +1,5 @@
 import webbrowser
-import urllib.parse
+from urllib.parse import quote
 from datetime import datetime
 
 def open_confirmation_email(event: dict, place: str = None) -> None:
@@ -41,12 +41,8 @@ def open_confirmation_email(event: dict, place: str = None) -> None:
 
     body += "\nSee you soon!\n"
 
-    # Construct mailto link
-    params = {
-        "subject": subject,
-        "body": body
-    }
-    mailto = f"mailto:{to}?{urllib.parse.urlencode(params)}"
+    # Construct mailto link with proper encoding (avoid + for spaces)
+    mailto = f"mailto:{to}?subject={quote(subject, safe='')}&body={quote(body, safe='')}"
 
     # Launch default email app
     webbrowser.open(mailto)
