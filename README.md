@@ -60,8 +60,7 @@ email_assistant/
 │   └── llm_place_parser.py      # LLM-based robust location parser
 ├── .gitignore
 └── README.md
-
-
+```
 
 ## ⚙️ Technologies Used
 Tool / Service	Purpose
