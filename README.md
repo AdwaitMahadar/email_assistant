@@ -75,39 +75,39 @@ requests	HTTP calls
 ## 🔒 Environment Variables
 Create a .env file in the root folder with:
 
-GEMINI_API_KEY=your_gemini_api_key
-GOOGLE_MAPS_API_KEY=your_maps_api_key
-Both keys are required for full functionality.
+> GEMINI_API_KEY=your_gemini_api_key  
+> GOOGLE_MAPS_API_KEY=your_maps_api_key  
+Both keys are required for full functionality.  
 
 ## 🧪 How to Run
 
-# 1. Install dependencies
-pip install -r requirements.txt
+### 1. Install dependencies
+> pip install -r requirements.txt
 
-# 2. Add your .env file
+### 2. Add your .env file
 
-# 3. Run the assistant
-python main.py
+### 3. Run the assistant
+> python main.py
 
 ## 📝 Example Conversation
 
-> summarize my week
-💬 You have a flight from LAX to JFK, meetings about Q2 strategy, and an AI conference in SF...
+- summarize my week
+> 💬 You have a flight from LAX to JFK, meetings about Q2 strategy, and an AI conference in SF...
 
-> Find restaurants near San Francisco
-📍 Top 3 places:
-1. Zuni Café — 1658 Market St (Rating: 4.4)
-2. Dumpling Home — 298 Gough St (Rating: 4.6)
-...
+- Find restaurants near San Francisco
+> 📍 Top 3 places:
+> 1. Zuni Café — 1658 Market St (Rating: 4.4)
+> 2. Dumpling Home — 298 Gough St (Rating: 4.6)
+> ...
 
-> create a calendar event for it
-✅ Calendar event saved as event_meeting_email_4.ics
-📁 Git Strategy
-All .ics files are saved to calendar_utils/saved_events/
+- create a calendar event for it
+> ✅ Calendar event saved as event_meeting_email_4.ics  
+> 📁 Git Strategy  
+All .ics files are saved to calendar_utils/saved_events/  
 
 This folder is tracked in Git, but *.ics files are ignored using:
 
-calendar_utils/saved_events/*.ics
+> calendar_utils/saved_events/*.ics  
 This ensures structure is preserved, but personal event files are not committed.
 
 
